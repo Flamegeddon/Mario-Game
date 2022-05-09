@@ -1,4 +1,5 @@
 
+
 /*=================================
 =            Variables            =
 =================================*/
@@ -56,12 +57,10 @@ noseX = "";
 noseY = "";
 GameStatus = "";
 
-function startGame(){
-  GameStatus = "start";
-  document.getElementById("status").innerHTML = "Game is loading";
-}
 function game(){
-  console.log("noseX = " + noseX + ", noseY = " + noseY);
+
+  console.log("noseX = " + noseX +" ,noseY =  "+ noseY);
+
   instializeInDraw();
   moveEnvironment(mario);
   drawSprites();
@@ -74,7 +73,7 @@ function game(){
     fill(255, 255, 255);
     textSize(40);
     textAlign(CENTER);
-    text("Press Play Button to Start and Play ", gameConfig.screenX/2, gameConfig.screenY/2);
+    text("Press Play Button To Start The Game ", gameConfig.screenX/2, gameConfig.screenY/2);
     textSize(40);
 
     stroke(255);
@@ -91,13 +90,11 @@ function game(){
     scores(mario);
     manualControl(mario);
   
-    // optional control version of game
-    // autoControl(mario);
-  
   }
 
     // if game is over 
   if(gameConfig.status==='gameover'){
+    
     fill(0,0,0,150);
     rect(0,0,gameConfig.screenX,gameConfig.screenY);
 
@@ -119,16 +116,22 @@ function game(){
   }
 }  
 
+function startGame()
+{
+  GameStatus = "start";
+  document.getElementById("status").innerHTML = "Game Is Loading";
+}
 
 // change game status if any key is pressed
 function changeGameStatud(character){
-  if(GameStatus=="start"&& noseX != "" && gameConfig.status==="start") {
-    world_start.play();
-    initializeCharacterStatus(mario);
-    gameConfig.status= "play";
+ if(noseX !="" && gameConfig.status==="start" && GameStatus=="start") { 
+   document.getElementById("status").innerHTML = "Game Is Loaded";
+   world_start.play();
+ initializeCharacterStatus(mario)
+    gameConfig.status= "play"
   }
   if(gameConfig.status==="gameover" && keyDown(control.revive)) {
-    gameConfig.status= "start";        
+    gameConfig.status= "start"        
   }
 }
 
@@ -144,22 +147,22 @@ function changeGameStatud(character){
 
 //initialize
 function instializeInSetup(character){
-	frameRate(120);
-	
-	character.scale=0.35;
-	initializeCharacterStatus(character)
+  frameRate(120);
+  
+  character.scale=0.35;
+  initializeCharacterStatus(character)
 
   bricks.displace(bricks);
-	platforms.displace(platforms);
-	coins.displace(coins);
-	coins.displace(platforms);
-	coins.collide(pipes);
-	coins.displace(bricks);		
+  platforms.displace(platforms);
+  coins.displace(coins);
+  coins.displace(platforms);
+  coins.collide(pipes);
+  coins.displace(bricks);   
 
   // change the scale of clouds
-	clouds.forEach(function(element){
-		element.scale=random(1,2);
-	})
+  clouds.forEach(function(element){
+    element.scale=random(1,2);
+  })
 }
 
 function initializeCharacterStatus(character){
@@ -220,6 +223,7 @@ function getCoins(coin,character){
   if( character.overlap(coin) && character.live && coin.get==false){
     character.coins+=1;
     coin.get=true;
+    mario_coin.play();
   };
 }
     
@@ -293,7 +297,7 @@ function manualControl(character){
     }
 
     if(noseX > 300){
-      character.velocity.x+=gameConfig.moveSpeed;
+        character.velocity.x+=gameConfig.moveSpeed;
       character.changeAnimation('move');
       character.mirrorX(1);
     }
@@ -307,15 +311,16 @@ function manualControl(character){
 
 /* Movements of character */
 function jumping(character){
-	if( (noseY < 200 && character.live) || (touchIsDown&&character.live) ){
-		character.velocity.y+=gameConfig.jump;
-	}
+  if( (noseY < 168  &&character.live) || (touchIsDown&&character.live) ){
+    character.velocity.y+=gameConfig.jump;
+    mario_jump.play();
+  }
 }
 
 
 /* Movements of character */
 function falling(character){
-	character.velocity.y += gameConfig.gravity;
+  character.velocity.y += gameConfig.gravity;
   character.changeAnimation('jump');
 }
 
@@ -323,39 +328,39 @@ function falling(character){
 /* See if  obj1 stand on obj2, mainly for see if standing on the objcs*/
 function standOnObjs(obj1,obj2){
   
-	var obj1_Left=leftSide(obj1);
-	var obj1_Right=rightSide(obj1);
-	var obj1_Up=upSide(obj1);
-	var obj1_Down=downSide(obj1);
+  var obj1_Left=leftSide(obj1);
+  var obj1_Right=rightSide(obj1);
+  var obj1_Up=upSide(obj1);
+  var obj1_Down=downSide(obj1);
 
-	var obj2_Left=leftSide(obj2);
-	var obj2_Right=rightSide(obj2);
-	var obj2_Up=upSide(obj2);
-	var obj2_Down=downSide(obj2);
+  var obj2_Left=leftSide(obj2);
+  var obj2_Right=rightSide(obj2);
+  var obj2_Up=upSide(obj2);
+  var obj2_Down=downSide(obj2);
 
-	if(obj1_Right>=obj2_Left&&obj1_Left<=obj2_Right && obj1_Down<=obj2_Up+7 && obj1_Down>=obj2_Up-7){
-		// println("YES");
-		obj1.velocity.y = 0;
-		obj1.position.y=obj2_Up-(obj1.height/2)-1;
-		obj1.standOnObj= true;
-	}
+  if(obj1_Right>=obj2_Left&&obj1_Left<=obj2_Right && obj1_Down<=obj2_Up+7 && obj1_Down>=obj2_Up-7){
+    // println("YES");
+    obj1.velocity.y = 0;
+    obj1.position.y=obj2_Up-(obj1.height/2)-1;
+    obj1.standOnObj= true;
+  }
 }
 
 /* See if  obj1 step on obj2 to kill it*/
 function StepOnEnemy(obj1,obj2){
   
-	var obj1_Left=leftSide(obj1);
-	var obj1_Right=rightSide(obj1);
-	var obj1_Up=upSide(obj1);
-	var obj1_Down=downSide(obj1);
+  var obj1_Left=leftSide(obj1);
+  var obj1_Right=rightSide(obj1);
+  var obj1_Up=upSide(obj1);
+  var obj1_Down=downSide(obj1);
 
-	var obj2_Left=leftSide(obj2);
-	var obj2_Right=rightSide(obj2);
-	var obj2_Up=upSide(obj2);
-	var obj2_Down=downSide(obj2);
+  var obj2_Left=leftSide(obj2);
+  var obj2_Right=rightSide(obj2);
+  var obj2_Up=upSide(obj2);
+  var obj2_Down=downSide(obj2);
 
-	if(obj1_Right>=obj2_Left&&obj1_Left<=obj2_Right && obj1_Down<=obj2_Up+7 && obj1_Down>=obj2_Up-7 && obj2.live==true && obj2.touching.top){
-		obj2.live=false;
+  if(obj1_Right>=obj2_Left&&obj1_Left<=obj2_Right && obj1_Down<=obj2_Up+7 && obj1_Down>=obj2_Up-7 && obj2.live==true && obj2.touching.top){
+    obj2.live=false;
     obj1.killing=30;
     obj1.kills++;
     if(obj1.velocity.y>=gameConfig.jump*0.8){
@@ -363,7 +368,8 @@ function StepOnEnemy(obj1,obj2){
     }else{
       obj1.velocity.y+=gameConfig.jump*0.8;
     }
-	}
+    mario_kick.play();
+  }
 }
 
 
@@ -375,6 +381,11 @@ function die(character){
     character.status="dead";
     character.changeAnimation('dead');
     character.velocity.y-=2;
+    console.log("die - " + character.liveNumber);
+    if(character.liveNumber > 0)
+    {
+      mario_die.play();
+    }
 }
 
 // check character status and response to sprite and game status
@@ -385,7 +396,8 @@ function checkStatus(character){
     reviveAfterMusic(character);
   }
   if(character.live==false && character.liveNumber==0){
-    gameConfig.status="gameover"
+    gameConfig.status="gameover";
+    mario_gameover.play();
   }
 
 }
@@ -407,11 +419,11 @@ function dontGetOutOfScreen(character){
   
   //if mario drop in the holes 
   if(character.position.y>gameConfig.screenY&&character.live && character==mario){
-  	die(mario);
+    die(mario);
   }
 
   if(character.position.x>gameConfig.screenX-(character.width*0.5)){
-  	character.position.x=gameConfig.screenX-(character.width*0.5);
+    character.position.x=gameConfig.screenX-(character.width*0.5);
   }else if(character.position.x<character.width*0.5){
     if(character==mario){
       character.position.x=character.width*0.5;
@@ -433,8 +445,8 @@ function dontGetOutOfScreen(character){
 function enemys(enemys){
     enemys.forEach(function(enemy){
       stateOfEnemy(enemy);
-	    positionOfEnemy(enemy);
-	    enemy.position.x-=gameConfig.enemyMoveSpeed;
+      positionOfEnemy(enemy);
+      enemy.position.x-=gameConfig.enemyMoveSpeed;
   });
 } 
 
@@ -450,13 +462,13 @@ function stateOfEnemy(enemy){
 /* Make enemy standing on objs */
 function positionOfEnemy(enemy){
 
-	platforms.forEach(function(element){ enemyStandOnObjs(enemy, element); });
-	bricks.forEach(function(element){ enemyStandOnObjs(enemy, element);});
+  platforms.forEach(function(element){ enemyStandOnObjs(enemy, element); });
+  bricks.forEach(function(element){ enemyStandOnObjs(enemy, element);});
   pipes.forEach(function(element){ enemyStandOnObjs(enemy, element); })
-	
-	enemy.position.y+=gameConfig.gravityEnemy;
+  
+  enemy.position.y+=gameConfig.gravityEnemy;
 
-	dontGetOutOfScreen(enemy);
+  dontGetOutOfScreen(enemy);
 }
 
 
@@ -497,7 +509,7 @@ function moveEnvironment(character){
     environmentScrolling(platforms,environmentScrollingSpeed);
     environmentScrolling(bricks,environmentScrollingSpeed);
     environmentScrolling(clouds,environmentScrollingSpeed*0.5);
-    environmentScrolling(mountains,environmentScrollingSpeed*0.3); 
+    environmentScrolling(mountains,environmentScrollingSpeed*1.3); 
     environmentScrolling(pipes,environmentScrollingSpeed); 
     environmentScrolling(coins,environmentScrollingSpeed); 
     environmentScrolling(enemyMushrooms,environmentScrollingSpeed); 
@@ -549,19 +561,19 @@ function environmentScrolling(group,environmentScrollingSpeed){
 
 /* for position state of character */
 function debugging(character){
-	strokeWeight(1);
-	fill(255);
-	textSize(12);
+  strokeWeight(1);
+  fill(255);
+  textSize(12);
   text(character.dying, 20,20);
-	text(gameConfig.status, 20,80);
-	// text("v: "+character.velocity.y,150,20);
-	noFill();
-	// outline(tube01);
-	stroke(251);
-	strokeWeight(2);
-	outline(character);
+  text(gameConfig.status, 20,80);
+  // text("v: "+character.velocity.y,150,20);
+  noFill();
+  // outline(tube01);
+  stroke(251);
+  strokeWeight(2);
+  outline(character);
 
-	pipes.forEach(function(element){ outline(element); });
+  pipes.forEach(function(element){ outline(element); });
   enemyMushrooms.forEach(function(element){ outline(element); });
 
 }
@@ -618,5 +630,3 @@ function upSide(obj){ return obj.position.y-(obj.height/2);}
 function downSide(obj){ return obj.position.y+(obj.height/2);}
 
 /*=====  End of For Debugging  ======*/
-
-
